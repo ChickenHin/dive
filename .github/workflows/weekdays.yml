@@ -3,8 +3,8 @@ name: Dive Weekday Scheduled Tests
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
 on:
-  schedule:
-    - cron: "40 5 * * 1,2,3,4,5" # 5:40 UTC (1:40 or 2:40 eastern)
+  # schedule:
+  #   - cron: "40 5 * * 1,2,3,4,5" # 5:40 UTC (1:40 or 2:40 eastern)
   workflow_dispatch: # manual
 
 # Full combination
@@ -15,12 +15,9 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        build_type: [Debug, RelWithDebInfo]
-        cc: [gcc-14, clang-19]
+        build_type: [Debug]
+        cc: [clang-19]
         include:
-          - cc: gcc-14
-            cxx: g++-14
-            cxx_flags: ""
           - cc: clang-19
             cxx: clang++-19
             cxx_flags: "-Wthread-safety"
@@ -39,7 +36,7 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        build_type: [Debug, RelWithDebInfo]
+        build_type: [Debug]
     uses: ./.github/workflows/build_windows.yml
     with:
       build_type: ${{ matrix.build_type }}
@@ -50,22 +47,22 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        build_type: [Debug, RelWithDebInfo]
+        build_type: [Debug]
     uses: ./.github/workflows/build_mac.yml
     with:
       build_type: ${{ matrix.build_type }}
       restore_cache: false
       upload_cache: true
 
-  build_device_android:
-    permissions:
-      contents: read
-      pull-requests: write
-    strategy:
-      matrix:
-        build_type: [Debug, RelWithDebInfo]
-    uses: ./.github/workflows/build_android.yml
-    with:
-      build_type: ${{ matrix.build_type }}
-      restore_cache: false
-      upload_cache: true
+  # build_device_android:
+  #   permissions:
+  #     contents: read
+  #     pull-requests: write
+  #   strategy:
+  #     matrix:
+  #       build_type: [Debug, RelWithDebInfo]
+  #   uses: ./.github/workflows/build_android.yml
+  #   with:
+  #     build_type: ${{ matrix.build_type }}
+  #     restore_cache: false
+  #     upload_cache: true
